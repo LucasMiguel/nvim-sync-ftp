@@ -80,9 +80,54 @@ end
 
 function M.Upload()
   getConfig()
+  local current_buffer_path = vim.api.nvim_buf_get_name(0)
+  local directoryTemp = directory
+  
+  -- message.warn("Send file ... Wait")
+
+  if not directoryTemp:match("/$") then
+    directoryTemp = directoryTemp .. "/"
+  end
+
+  local relative_path = current_buffer_path:sub(#directoryTemp + 1)
+ 
+  if not config.remote_path:match("/$") then
+    config.remote_path = config.remote_path .. "/"
+  end
+
+  local remotePath = config.remote_path .. relative_path
+  
+  local ftp_script = string.format([[
+  open %s
+  user %s %s
+  put %s %s
+  bye
+  ]], config.host, config.user, config.password, current_buffer_path, remotePath)
   
 
+  local script_file = "ftp_commands.txt"
+  local file = io.open(script_file, "w")
+  file:write(ftp_script)
+  file:close()
+
+  local log_file = "/tmp/ftp_log.txt"
   
+  local exit_code = os.execute(string.format("ftp -n < %s > %s 2>&1", script_file, log_file))
+ 
+
+  local log = io.open(log_file, "r")
+  local log_content = log:read("*a")
+  log:close()
+
+  if log_content:match("Error") or log_content:match("fail") then
+    message.error("Fail to upload file!" .. log_content)
+  else
+    message.success("File send successfully!")
+  end
+
+  os.remove(script_file)
+  os.remove(log_file)
+
 end
 
 return M

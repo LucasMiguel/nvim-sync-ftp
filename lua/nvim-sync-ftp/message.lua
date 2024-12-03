@@ -18,7 +18,7 @@ M.error_once = vim.schedule_wrap(function(fmt, ...)
 end)
 
 M.success = vim.schedule_wrap(function(fmt, ...)
-  vim.notify_once(fmt:format(...), vim.log.levels.SUCCESS, { title = 'Sync FTP'})
+  vim.notify(fmt:format(...), levels.SUCCESS, { title = 'Sync FTP'})
 end)
 
 return M
