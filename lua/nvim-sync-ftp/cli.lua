@@ -61,14 +61,17 @@ local function read_file(path)
   return lines
 end
 
-local function getConfig()
+function M.getConfig()
+
+  local configTemp = {};
+
   if file_exists() then
     local content, err = read_file(filePath)
 
     if content then
       for i, line in ipairs(content) do
         local first_word, second_word = line:match("^(%S+)%s+(%S+)$")
-        config[first_word] = second_word
+        configTemp[first_word] = second_word
      end
     else
       message(err);
@@ -76,11 +79,13 @@ local function getConfig()
   else
     message.error("Config file not found!")
   end
+
+  return configTemp
 end
 
 function M.Upload()
 
-  getConfig()
+  config = M.getConfig()
   local current_buffer_path = vim.api.nvim_buf_get_name(0)
   local directoryTemp = directory
 
@@ -102,19 +107,19 @@ function M.Upload()
     'curl -T "%s" ftp://%s/%s --user "%s:%s" > /dev/null 2>&1',
     current_buffer_path, config.host, remotePath, config.user, config.password)
 
-    vim.loop.spawn("sh", {
-        args = { "-c", command },
-    }, function(code, signal)
-        if code == 0 then
-            vim.schedule(function()
-                message.info("File uploaded successfully!")
-            end)
-        else
-            vim.schedule(function()
-                message.error("File upload failed with exit code: " .. code)
-            end)
-        end
-    end)
+  vim.loop.spawn("sh", {
+      args = { "-c", command },
+  }, function(code, signal)
+      if code == 0 then
+          vim.schedule(function()
+              message.info("File uploaded successfully!")
+          end)
+      else
+          vim.schedule(function()
+              message.error("File upload failed with exit code: " .. code)
+          end)
+      end
+  end)
 
 end
 
