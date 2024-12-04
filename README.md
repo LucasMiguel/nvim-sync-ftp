@@ -45,3 +45,8 @@ Create a file named `.sync-ftp-config` in the project root, or run the command `
 **upload_to_save**: (true|false) - Setting to send file when saving
 
 
+## Commands
+
+`:SyncFtpMapToRemote`: Create configuration file in root directory
+
+`:SyncFtpUpload`: Upload file from current open Buffer
