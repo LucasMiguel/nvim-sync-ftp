@@ -24,7 +24,7 @@ function M.setup(opts)
 
   if next(config) ~= nil then
     -- Config for on save
-    if config.upload_to_save == true then
+    if config.upload_to_save == 'true' then
       vim.api.nvim_create_augroup("SyncFtpUploadGroup", { clear = true })
 
       vim.api.nvim_create_autocmd("BufWritePost", {
@@ -38,7 +38,6 @@ function M.setup(opts)
 
 
   end
-
 
 end
 
