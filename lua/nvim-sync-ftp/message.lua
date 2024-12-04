@@ -8,6 +8,11 @@ M.warn = vim.schedule_wrap(function(fmt, ...)
 end)
 
 --- @type fun(fmt: string, ...: string)
+M.info = vim.schedule_wrap(function(fmt, ...)
+  vim.notify(fmt:format(...), vim.log.INFO, { title = 'Sync FTP' })
+end)
+
+--- @type fun(fmt: string, ...: string)
 M.error = vim.schedule_wrap(function(fmt, ...)
   vim.notify(fmt:format(...), vim.log.levels.ERROR, { title = 'Sync FTP' })
 end)
@@ -18,7 +23,7 @@ M.error_once = vim.schedule_wrap(function(fmt, ...)
 end)
 
 M.success = vim.schedule_wrap(function(fmt, ...)
-  vim.notify(fmt:format(...), levels.SUCCESS, { title = 'Sync FTP'})
+  vim.notify(fmt:format(...), vim.log.INFO, { title = 'Sync FTP'})
 end)
 
 return M
