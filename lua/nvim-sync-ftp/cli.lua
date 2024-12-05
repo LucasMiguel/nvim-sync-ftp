@@ -76,8 +76,6 @@ function M.getConfig()
     else
       message(err);
     end
-  else
-    message.error("Config file not found!")
   end
 
   return configTemp
